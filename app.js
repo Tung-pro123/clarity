@@ -261,7 +261,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const cached = localStorage.getItem('siti_hope_stars');
       if (cached) {
         sharedStars = JSON.parse(cached);
-      } else {
+      }
+      
+      // Fallback to default wishes if sharedStars is empty
+      if (!Array.isArray(sharedStars) || sharedStars.length === 0) {
         sharedStars = [...defaultWishes];
       }
 
@@ -270,8 +273,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (response.ok) {
         const cloudData = await response.json();
         if (Array.isArray(cloudData) && cloudData.length > 0) {
-          sharedStars = cloudData;
-          localStorage.setItem('siti_hope_stars', JSON.stringify(cloudData));
+          // Merge defaults with cloud data to ensure they are always present, avoiding duplicates
+          const merged = [...cloudData];
+          defaultWishes.forEach(def => {
+            const exists = merged.some(star => star.author === def.author && star.text === def.text);
+            if (!exists) {
+              merged.unshift(def); // Add defaults at the front
+            }
+          });
+          sharedStars = merged;
+          localStorage.setItem('siti_hope_stars', JSON.stringify(sharedStars));
         }
       } else if (response.status === 404) {
         // Initialize cloud database with defaults if empty
@@ -279,7 +290,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.warn("Cloud DB sync failed. Running in offline fallback mode:", err);
-      if (sharedStars.length === 0) sharedStars = [...defaultWishes];
+      if (!Array.isArray(sharedStars) || sharedStars.length === 0) {
+        sharedStars = [...defaultWishes];
+      }
     }
   }
 
