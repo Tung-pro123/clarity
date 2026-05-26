@@ -115,7 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 2. If no bucket exists, register a fresh one dynamically on kvdb.io
       console.log("No shared bucket found. Creating a new one...");
-      const createRes = await fetch('https://kvdb.io/', { method: 'POST' });
+      const createRes = await fetch('https://kvdb.io/', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=siti_hope_2026@fptu.edu.vn'
+      });
       if (createRes.ok) {
         const newBucketId = (await createRes.text()).trim();
         if (newBucketId) {

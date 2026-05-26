@@ -41,7 +41,7 @@ echo.
 git push -u origin main
 
 echo.
-if %errorlevel% eq 0 (
+if %errorlevel% equ 0 (
     echo [Thanh cong] Ma nguon da duoc dua len Github tai:
     echo https://github.com/Tung-pro123/clarity.git
 ) else (
