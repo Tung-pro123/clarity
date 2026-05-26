@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#020617">
+  
+  <title>Hành Trình Hy Vọng 2026 — Thấu Sao Dệt Sáng</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Chiến dịch cộng đồng 'Hành Trình Hy Vọng 2026 — Thấu Sao Dệt Sáng' hỗ trợ trẻ em khuyết tật tại các mái ấm. Trải nghiệm không gian tương tác giả lập thấu cảm và dệt nên chòm sao hy vọng lấp lánh.">
+  <meta property="og:title" content="Hành Trình Hy Vọng 2026 — Thấu Sao Dệt Sáng">
+  <meta property="og:description" content="Thấu hiểu những vì sao, cùng dệt lên bầu trời hy vọng. Trải nghiệm tương tác giả lập và đóng góp gây quỹ cùng SiTiGroup Đại học FPT.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/hero_bg.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Local Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ==================== WELCOME INTRO OVERLAY ==================== -->
+  <div class="welcome-screen" id="welcome-screen">
+    <canvas id="welcome-stars-canvas" class="welcome-canvas"></canvas>
+    
+    <!-- Welcome Form Card -->
+    <div class="welcome-content glass text-center" id="welcome-form-card">
+      <div class="badge-campaign" style="margin-bottom: 16px;">
+        <span class="badge-dot"></span>
+        HÀNH TRÌNH HY VỌNG 2026
+      </div>
+      <h2 class="welcome-title">Thấu Sao <span class="text-gradient">Dệt Sáng</span></h2>
+      <p class="welcome-desc">
+        Mỗi lời nhắn gửi của bạn sẽ dệt nên một chòm sao hy vọng lấp lánh trên bầu trời đêm của các em nhỏ khuyết tật.
+      </p>
+      
+      <div class="welcome-input-group">
+        <input type="text" id="welcome-name-input" placeholder="Tên hoặc Biệt danh của bạn..." maxlength="20" autocomplete="off" required>
+        <input type="text" id="welcome-msg-input" placeholder="Lời nhắn gửi yêu thương đến các em..." maxlength="60" autocomplete="off" required>
+        <button class="btn btn-primary btn-glow" id="btn-start-journey">Bắt Đầu Dệt Sáng</button>
+      </div>
+      
+      <button class="welcome-skip" id="btn-skip-welcome">Bỏ qua & Khám phá trực tiếp</button>
+    </div>
+
+    <!-- Floating Go To Homepage Button (Revealed after 5s constellation delay) -->
+    <button class="btn btn-secondary btn-glow" id="btn-go-home" style="position: absolute; bottom: 80px; left: 50%; transform: translate(-50%, 20px); display: none; opacity: 0; z-index: 10; font-family: var(--font-display); font-size: 1.1rem; padding: 16px 36px;">
+      Tiến Vào Trang Chủ ➔
+    </button>
+  </div>
+
+  <!-- ==================== BACKGROUND GLOW EFFECTS ==================== -->
+  <div class="space-bg">
+    <div class="nebula nebula-purple"></div>
+    <div class="nebula nebula-blue"></div>
+    <div class="nebula nebula-teal"></div>
+  </div>
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="navbar" id="main-nav">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span class="logo-text">Hành Trình <span>Hy Vọng</span></span>
+      </a>
+      
+      <nav class="nav-links">
+        <a href="#about" class="nav-link">Giới Thiệu</a>
+        <a href="#stations" class="nav-link">3 Trạm Tương Tác</a>
+        <a href="#constellation" class="nav-link">Bầu Trời Hy Vọng</a>
+        <a href="#shop" class="nav-link">Gian Hàng Kết Quang</a>
+        <a href="#moments" class="nav-link">Khoảnh Khắc</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Personalized Greeting -->
+        <span class="nav-welcome" id="nav-welcome-msg" style="display: none; font-family: var(--font-display); font-size: 0.88rem; color: var(--accent); font-weight: 600; text-shadow: 0 0 10px rgba(255, 183, 3, 0.3);">Chào, <span class="user-name-val">Bạn</span>! ✨</span>
+        <!-- Cart Icon -->
+        <button class="cart-trigger" id="cart-btn" aria-label="Xem giỏ hàng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" id="cart-count">0</span>
+        </button>
+        <a href="#shop" class="btn btn-primary btn-sm btn-glow">Gây Quỹ Ngay</a>
+      </div>
+      
+      <button class="menu-mobile-trigger" id="menu-btn" aria-label="Mở menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MOBILE MENU ==================== -->
+  <div class="mobile-menu" id="mobile-menu-panel">
+    <nav class="mobile-nav-links">
+      <a href="#about" class="mobile-link">Giới Thiệu</a>
+      <a href="#stations" class="mobile-link">3 Trạm Tương Tác</a>
+      <a href="#constellation" class="mobile-link">Bầu Trời Hy Vọng</a>
+      <a href="#shop" class="mobile-link">Gian Hàng Kết Quang</a>
+      <a href="#moments" class="mobile-link">Khoảnh Khắc</a>
+      <a href="#shop" class="btn btn-primary btn-glow">Gây Quỹ Ngay</a>
+    </nav>
+  </div>
+
+  <main>
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero page-tab active-tab" id="home">
+      <!-- Interactive Hero Canvas for star particles -->
+      <canvas id="hero-stars-canvas" class="hero-canvas"></canvas>
+      
+      <div class="container hero-wrapper">
+        <div class="hero-content">
+          <div class="badge-campaign">
+            <span class="badge-dot"></span>
+            SiTiGroup - Đại học FPT TP.HCM
+          </div>
+          <h1 class="hero-title" id="main-hero-title">
+            Thấu Sao<br>
+            <span class="text-gradient">Dệt Sáng</span>
+          </h1>
+          <p class="hero-subtitle">
+            Hành trình thấu hiểu những mảnh đời kém may mắn, cùng <strong class="user-name-val text-gradient" style="font-weight: 700;">Bạn</strong> kết nối yêu thương để thắp lên những tia sáng hy vọng ấm áp trên bầu trời đêm của các em nhỏ khuyết tật.
+          </p>
+          <div class="hero-btns">
+            <a href="#stations" class="btn btn-primary btn-lg btn-glow">Khám Phá Hành Trình</a>
+            <a href="#constellation" class="btn btn-outline btn-lg">Dệt Lời Chúc</a>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="main-star-container">
+            <div class="pulse-ring ring-1"></div>
+            <div class="pulse-ring ring-2"></div>
+            <div class="pulse-ring ring-3"></div>
+            <div class="glowing-star">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <!-- Decorative elements floating -->
+            <div class="floating-bubble bubble-1">Thấu Cảm</div>
+            <div class="floating-bubble bubble-2">Sẻ Chia</div>
+            <div class="floating-bubble bubble-3">Hy Vọng</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-bottom-fade"></div>
+    </section>
+
+    <!-- ==================== INTRODUCTION SECTION ==================== -->
+    <section class="about page-tab" id="about">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2 class="section-title">Về Chiến Dịch</h2>
+          <p class="section-desc">Chúng tôi tin rằng mỗi đứa trẻ sinh ra đều là một ngôi sao lấp lánh. Dù có những ánh sao chưa được trọn vẹn, sự thấu cảm của chúng ta sẽ giúp dệt nên bầu trời sáng ngời.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card glass">
+            <div class="about-card-icon icon-purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+              </svg>
+            </div>
+            <h3>Sứ Mệnh Thấu Cảm</h3>
+            <p>Xây dựng cầu nối yêu thương giữa cộng đồng và các em nhỏ khuyết tật, khiếm thính, khiếm thị tại các mái ấm thông qua các hoạt động trải nghiệm thực tế đầy tính nhân văn.</p>
+          </div>
+
+          <div class="about-card glass">
+            <div class="about-card-icon icon-teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3>Kết Nối Sức Trẻ</h3>
+            <p>Do SiTiGroup - Cộng đồng Sinh viên Tình nguyện FPT TP.HCM tổ chức, khơi dậy tinh thần nhiệt huyết, sáng tạo vì cộng đồng của thế hệ trẻ năng động.</p>
+          </div>
+
+          <div class="about-card glass">
+            <div class="about-card-icon icon-gold">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <h3>Gây Quỹ Trọn Vẹn</h3>
+            <p>Toàn bộ 100% lợi nhuận từ việc bán các vật phẩm lưu niệm độc quyền "Kết Quang" và đóng góp trực tiếp sẽ được dùng để mua nhu yếu phẩm và trao tặng hiện kim hỗ trợ mái ấm.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3 STATIONS SECTION ==================== -->
+    <section class="stations page-tab" id="stations">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Hành Trình Tương Tác</span>
+          <h2 class="section-title">Khám Phá 3 Trạm Hy Vọng</h2>
+          <p class="section-desc">Hãy lần lượt bước qua 3 trạm trải nghiệm để thấu hiểu sâu sắc, kết nối chân thành và lan tỏa những tia sáng yêu thương.</p>
+        </div>
+
+        <div class="stations-wrapper">
+          
+          <!-- Station 1 -->
+          <div class="station-block">
+            <div class="station-info">
+              <div class="station-num">Trạm 1</div>
+              <h3 class="station-heading">Thấu Ánh Sao</h3>
+              <p class="station-intro">Không gian triển lãm nghệ thuật kể câu chuyện cuộc sống của các em nhỏ khuyết tật tại mái ấm. Đằng sau những nghịch cảnh là một tinh thần kiên cường, khao khát được dệt nên những ước mơ riêng mình.</p>
+              
+              <div class="story-carousel">
+                <div class="story-card glass active">
+                  <div class="story-author">Em Minh Anh (10 tuổi) — Mái ấm Hy Vọng</div>
+                  <p class="story-text">"Em không nhìn thấy màu sắc của bầu trời, nhưng em có thể nghe thấy tiếng gió rầm rì và tưởng tượng ra những chòm sao đang khiêu vũ. Em mong sau này có thể trở thành một nhạc sĩ."</p>
+                </div>
+              </div>
+            </div>
+            <div class="station-visual">
+              <div class="station-art glass">
+                <div class="art-pulse-star"></div>
+                <svg viewBox="0 0 100 100" class="art-svg">
+                  <circle cx="50" cy="50" r="30" stroke="rgba(114, 9, 183, 0.3)" stroke-width="1" fill="none"></circle>
+                  <circle cx="50" cy="50" r="20" stroke="rgba(0, 245, 212, 0.2)" stroke-width="1" fill="none"></circle>
+                  <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(255, 255, 255, 0.05)" stroke-width="0.5"></line>
+                  <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255, 255, 255, 0.05)" stroke-width="0.5"></line>
+                  <polygon points="50,25 53,42 70,45 53,48 50,65 47,48 30,45 47,42" fill="url(#violet-teal-grad)"></polygon>
+                  <defs>
+                    <linearGradient id="violet-teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#7209b7" />
+                      <stop offset="100%" stop-color="#00f5d4" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Station 2: Empathy Simulator (INNOVATION!) -->
+          <div class="station-block reverse">
+            <div class="station-info" id="sim-text-container">
+              <div class="station-num">Trạm 2</div>
+              <h3 class="station-heading">Chạm Ánh Sao</h3>
+              <p class="station-intro">
+                Để thực sự thấu hiểu, chúng ta cần học cách "đặt mình vào thế giới của các em". Hãy sử dụng **Bộ Giả Lập Thấu Cảm** bên dưới để trải nghiệm thử những khó khăn thường nhật mà các em nhỏ khuyết tật vượt qua mỗi ngày.
+              </p>
+              
+              <!-- Empathy Simulator Widget -->
+              <div class="simulator-widget glass">
+                <div class="sim-header">
+                  <span class="sim-title">
+                    <span class="sim-live-indicator"></span>
+                    BỘ GIẢ LẬP THẤU CẢM VẬT LÝ
+                  </span>
+                </div>
+                
+                <div class="sim-controls">
+                  <button class="sim-btn" id="btn-dyslexia" data-sim="dyslexia">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sim-icon">
+                      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Chứng Khó Đọc (Dyslexia)
+                  </button>
+                  <button class="sim-btn" id="btn-blindness" data-sim="blindness">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sim-icon">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                    Nhược Thị (Blur Vision)
+                  </button>
+                  <button class="sim-btn" id="btn-deafness" data-sim="deafness">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sim-icon">
+                      <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                      <line x1="23" y1="9" x2="17" y2="15"></line>
+                      <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                    Khiếm Thính (Silent Wave)
+                  </button>
+                </div>
+
+                <div class="sim-display" id="sim-screen">
+                  <div class="sim-overlay-message" id="sim-status-msg">Chọn một chế độ giả lập ở trên để cảm nhận.</div>
+                  
+                  <!-- Deafness visual waveform (Canvas) -->
+                  <canvas id="deafness-canvas" class="deafness-visualizer"></canvas>
+                  
+                  <div class="sim-content-body" id="sim-text-target">
+                    Chào mừng bạn đến với Trạm Chạm Ánh Sao. Tại đây, sự chia sẻ bắt nguồn từ sự thấu cảm chân thành nhất. Hãy cùng chung tay dệt nên hy vọng cho tương lai của các em nhỏ.
+                  </div>
+                </div>
+                
+                <div class="sim-footer">
+                  <button class="btn btn-outline btn-sm" id="btn-reset-sim">Tắt Giả Lập</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="station-visual">
+              <div class="station-art glass">
+                <div class="avatar-interactive">
+                  <div class="avatar-glow"></div>
+                  <!-- Inline SVG for empathetic hand hugging a star -->
+                  <svg viewBox="0 0 200 200" class="art-svg-hand">
+                    <circle cx="100" cy="100" r="80" fill="rgba(255, 255, 255, 0.02)" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"></circle>
+                    <path d="M60,110 C80,90 90,80 110,60 C120,50 135,50 145,60 C155,70 155,85 145,95 C130,110 110,130 90,150 C80,160 65,160 55,150 C45,140 45,120 60,110 Z" fill="rgba(0, 245, 212, 0.1)" stroke="#00f5d4" stroke-width="2"></path>
+                    <path d="M140,110 C120,90 110,80 90,60 C80,50 65,50 55,60 C45,70 45,85 55,95 C70,110 90,130 110,150 C120,160 135,160 145,150 C155,140 155,120 140,110 Z" fill="rgba(114, 9, 183, 0.1)" stroke="#7209b7" stroke-width="2"></path>
+                    <polygon points="100,65 103,77 115,80 103,83 100,95 97,83 85,80 97,77" fill="#ffb703" class="pulse-star-svg"></polygon>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Station 3 -->
+          <div class="station-block">
+            <div class="station-info">
+              <div class="station-num">Trạm 3</div>
+              <h3 class="station-heading">Tỏa Ánh Sao</h3>
+              <p class="station-intro">Nơi bạn gửi gắm yêu thương qua những bức thư, lời chúc tốt đẹp nhất. Mỗi lời nhắn gửi ấm lòng của bạn sẽ được chắp cánh, dệt thành một vì sao lấp lánh tỏa sáng trên bầu trời đêm khát vọng của các em nhỏ.</p>
+              
+              <!-- Star Wishing Form -->
+              <form id="wishing-form" class="wish-form glass">
+                <div class="form-group">
+                  <label for="wish-author">Tên hoặc Biệt danh của bạn</label>
+                  <input type="text" id="wish-author" placeholder="Ví dụ: Người giấu tên, Tiên Sa..." required autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="wish-text">Lời chúc của bạn gửi tới các em</label>
+                  <textarea id="wish-text" rows="3" placeholder="Gửi những lời chúc ấm áp nhất..." required autocomplete="off"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Chọn màu sắc cho ngôi sao của bạn</label>
+                  <div class="star-color-picker">
+                    <label class="color-opt color-gold">
+                      <input type="radio" name="star-color" value="#ffb703" checked>
+                      <span></span>
+                    </label>
+                    <label class="color-opt color-teal">
+                      <input type="radio" name="star-color" value="#00f5d4">
+                      <span></span>
+                    </label>
+                    <label class="color-opt color-purple">
+                      <input type="radio" name="star-color" value="#a2d2ff">
+                      <span></span>
+                    </label>
+                    <label class="color-opt color-magenta">
+                      <input type="radio" name="star-color" value="#ff007f">
+                      <span></span>
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-glow w-full">Dệt Lời Chúc Bay Lên</button>
+              </form>
+            </div>
+            
+            <div class="station-visual">
+              <div class="station-art glass">
+                <div class="envelope-container">
+                  <div class="envelope-flap"></div>
+                  <div class="envelope-body"></div>
+                  <div class="envelope-letter">
+                    <p>💌</p>
+                    <span>Yêu thương đong đầy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== WISHING SKY CONSTELLATION (INNOVATION!) ==================== -->
+    <section class="constellation-section page-tab" id="constellation">
+      <div class="constellation-bg-effects"></div>
+      <div class="container relative">
+        <div class="section-header text-center">
+          <span class="section-tag">Bản Đồ Vũ Trụ</span>
+          <h2 class="section-title">Bầu Trời Đêm Hy Vọng</h2>
+          <p class="section-desc">Rê chuột hoặc chạm vào các vì sao lấp lánh để lắng nghe và cảm nhận những thông điệp yêu thương từ khắp mọi miền tổ quốc gửi về cho các em.</p>
+        </div>
+
+        <!-- Interactive wishing star canvas -->
+        <div class="canvas-wrapper glass">
+          <canvas id="wishing-sky-canvas"></canvas>
+          <div class="canvas-instructions">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Rê chuột để đọc lời chúc. Nhấp chuột vào khoảng không để châm một vì sao mới ngẫu nhiên!</span>
+          </div>
+
+          <!-- Dynamic tooltip card for Canvas star details -->
+          <div class="star-tooltip glass" id="star-tooltip">
+            <div class="tooltip-star-icon">★</div>
+            <div class="tooltip-author" id="tooltip-author">Nguyễn Văn A</div>
+            <div class="tooltip-text" id="tooltip-text">Chúc các em nhỏ luôn vui vẻ, rạng rỡ và tràn đầy niềm tin vào cuộc sống!</div>
+            <div class="tooltip-time">Đã dệt thành công</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== GAY QUY & SHOP SECTION ==================== -->
+    <section class="shop-section page-tab" id="shop">
+      <div class="container">
+        
+        <div class="section-header text-center">
+          <span class="section-tag">Gian Hàng Kết Quang</span>
+          <h2 class="section-title">Ủng Hộ Lưu Niệm & Quyên Góp</h2>
+          <p class="section-desc">Mỗi sản phẩm lưu niệm bạn sở hữu sẽ trực tiếp bổ sung nguồn lực 100% lợi nhuận vào quỹ mua sắm thực phẩm, học bổng và thiết bị y tế cho các em khuyết tật.</p>
+        </div>
+
+        <!-- Fundraiser progress bar -->
+        <div class="donation-progress-panel glass">
+          <div class="progress-info">
+            <span class="progress-title">Quỹ Hành Trình Hy Vọng 2026</span>
+            <span class="progress-values"><strong id="current-funds">18,500,000đ</strong> / 30,000,000đ</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar-fill" style="width: 61.66%;">
+              <div class="progress-glow"></div>
+            </div>
+          </div>
+          <div class="progress-footer">
+            <span>❤️ Đã có 142 lượt dệt sáng quyên góp thành công</span>
+            <span>Đạt 61.6% mục tiêu</span>
+          </div>
+        </div>
+
+        <div class="shop-grid">
+          
+          <!-- Product 1 -->
+          <div class="product-card glass" data-id="p1" data-price="120000" data-name="Gấu Bông Thấu Sao">
+            <div class="product-img-wrapper">
+              <div class="product-gradient-bg bg-purple"></div>
+              <!-- Premium Fallback SVG styling for bear -->
+              <svg viewBox="0 0 100 100" class="product-svg-fallback">
+                <circle cx="50" cy="50" r="30" fill="rgba(114, 9, 183, 0.15)"></circle>
+                <circle cx="35" cy="30" r="10" fill="#7209b7"></circle>
+                <circle cx="65" cy="30" r="10" fill="#7209b7"></circle>
+                <circle cx="50" cy="55" r="26" fill="#7209b7"></circle>
+                <circle cx="50" cy="38" r="20" fill="#8f2dff"></circle>
+                <polygon points="50,30 52,36 58,37 53,41 55,47 50,44 45,47 47,41 42,37 48,36" fill="#ffb703"></polygon>
+              </svg>
+              <!-- Real Generated Image -->
+              <img src="assets/bear.png" alt="Gấu Bông Thấu Sao" class="product-real-img" onerror="this.style.display='none';">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Lưu niệm giới hạn</span>
+              <h3 class="product-title">Gấu Bông Thấu Sao</h3>
+              <p class="product-desc">Gấu len organic móc bằng tay từ sợi cotton cao cấp, thêu nổi ngôi sao vàng phát sáng trong bóng tối.</p>
+              <div class="product-footer">
+                <span class="product-price">120,000 đ</span>
+                <button class="btn btn-primary btn-sm btn-add-cart">Thêm Vào Giỏ</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="product-card glass" data-id="p2" data-price="65000" data-name="Sổ Tay Kết Quang">
+            <div class="product-img-wrapper">
+              <div class="product-gradient-bg bg-blue"></div>
+              <!-- Premium Fallback SVG for notebook -->
+              <svg viewBox="0 0 100 100" class="product-svg-fallback">
+                <rect x="30" y="20" width="40" height="60" rx="3" fill="#4361ee"></rect>
+                <line x1="25" y1="30" x2="30" y2="30" stroke="#ffb703" stroke-width="3"></line>
+                <line x1="25" y1="45" x2="30" y2="45" stroke="#ffb703" stroke-width="3"></line>
+                <line x1="25" y1="60" x2="30" y2="60" stroke="#ffb703" stroke-width="3"></line>
+                <polygon points="50,45 52,49 57,50 53,53 54,58 50,56 46,58 47,53 43,50 48,49" fill="#00f5d4"></polygon>
+              </svg>
+              <!-- Real Generated Image -->
+              <img src="assets/notebook.png" alt="Sổ Tay Kết Quang" class="product-real-img" onerror="this.style.display='none';">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Văn phòng phẩm</span>
+              <h3 class="product-title">Sổ Tay Kết Quang</h3>
+              <p class="product-desc">Sổ tay bìa nhung xanh Navy, trang trong giấy tái chế tự nhiên dòng kẻ lưới, in họa tiết chòm sao óng ánh.</p>
+              <div class="product-footer">
+                <span class="product-price">65,000 đ</span>
+                <button class="btn btn-primary btn-sm btn-add-cart">Thêm Vào Giỏ</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="product-card glass" data-id="p3" data-price="35000" data-name="Móc Khóa Hy Vọng">
+            <div class="product-img-wrapper">
+              <div class="product-gradient-bg bg-teal"></div>
+              <!-- Premium Fallback SVG for keychain -->
+              <svg viewBox="0 0 100 100" class="product-svg-fallback">
+                <circle cx="50" cy="50" r="16" fill="rgba(0, 245, 212, 0.2)" stroke="#00f5d4" stroke-width="2"></circle>
+                <circle cx="50" cy="22" r="6" fill="none" stroke="#ccc" stroke-width="2"></circle>
+                <line x1="50" y1="28" x2="50" y2="34" stroke="#ccc" stroke-width="2"></line>
+                <polygon points="50,42 52,46 57,47 53,50 54,55 50,53 46,55 47,50 43,47 48,46" fill="#ffb703"></polygon>
+              </svg>
+              <!-- Real Generated Image -->
+              <img src="assets/keychain.png" alt="Móc Khóa Hy Vọng" class="product-real-img" onerror="this.style.display='none';">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Phụ kiện xinh xắn</span>
+              <h3 class="product-title">Móc Khóa Hy Vọng</h3>
+              <p class="product-desc">Móc khóa acrylic 2 lớp cao cấp, nhân vật vũ trụ lấp lánh bột nhũ tinh vân chuyển động linh hoạt.</p>
+              <div class="product-footer">
+                <span class="product-price">35,000 đ</span>
+                <button class="btn btn-primary btn-sm btn-add-cart">Thêm Vào Giỏ</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Donation Box -->
+          <div class="product-card glass donation-custom-card">
+            <div class="donation-card-glow"></div>
+            <h3 class="custom-card-title">✨ Quyên Góp Tuỳ Chọn ✨</h3>
+            <p class="custom-card-desc">Nếu không lấy quà lưu niệm, bạn có thể gửi trực tiếp một khoản quỹ yêu thương tuỳ tâm đến các em nhỏ.</p>
+            
+            <div class="donation-input-group">
+              <input type="number" id="custom-donation-amount" placeholder="Nhập số tiền (đ)" min="10000" step="5000">
+              <button class="btn btn-secondary btn-glow" id="btn-custom-donate">Ủng Hộ</button>
+            </div>
+            <div class="donation-quick-options">
+              <button class="quick-donation-btn" data-val="50000">50k</button>
+              <button class="quick-donation-btn" data-val="100000">100k</button>
+              <button class="quick-donation-btn" data-val="200000">200k</button>
+              <button class="quick-donation-btn" data-val="500000">500k</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== GALLERY / KHOANH KHAC ==================== -->
+    <section class="moments-section page-tab" id="moments">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">Album Ảnh</span>
+          <h2 class="section-title">Khoảnh Khắc Hành Trình</h2>
+          <p class="section-desc">Những nụ cười rạng rỡ, những cái ôm ấm áp và sự nhiệt huyết của đội ngũ sinh viên tình nguyện SiTiGroup FPT đồng hành cùng các em nhỏ.</p>
+        </div>
+
+        <div class="gallery-grid">
+          <div class="gallery-item glass">
+            <div class="gallery-overlay"><span>Trạm Trải Nghiệm Mái Ấm</span></div>
+            <!-- Beautiful placeholder vector as source image -->
+            <svg viewBox="0 0 300 200" class="gallery-svg">
+              <rect width="300" height="200" fill="#0b1329"></rect>
+              <circle cx="150" cy="100" r="40" fill="rgba(114, 9, 183, 0.2)"></circle>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#00f5d4" font-size="14" font-family="Outfit">Trải Nghiệm Trạm 1</text>
+            </svg>
+          </div>
+          <div class="gallery-item glass">
+            <div class="gallery-overlay"><span>Trao Quà Nhu Yếu Phẩm</span></div>
+            <svg viewBox="0 0 300 200" class="gallery-svg">
+              <rect width="300" height="200" fill="#0b1329"></rect>
+              <circle cx="150" cy="100" r="40" fill="rgba(0, 245, 212, 0.2)"></circle>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#ffb703" font-size="14" font-family="Outfit">Hoạt Động Trao Quà</text>
+            </svg>
+          </div>
+          <div class="gallery-item glass">
+            <div class="gallery-overlay"><span>Nụ Cười Trẻ Thơ</span></div>
+            <svg viewBox="0 0 300 200" class="gallery-svg">
+              <rect width="300" height="200" fill="#0b1329"></rect>
+              <circle cx="150" cy="100" r="40" fill="rgba(255, 183, 3, 0.2)"></circle>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#a2d2ff" font-size="14" font-family="Outfit">Giao Lưu Âm Nhạc</text>
+            </svg>
+          </div>
+          <div class="gallery-item glass">
+            <div class="gallery-overlay"><span>Lớp Học Hy Vọng</span></div>
+            <svg viewBox="0 0 300 200" class="gallery-svg">
+              <rect width="300" height="200" fill="#0b1329"></rect>
+              <circle cx="150" cy="100" r="40" fill="rgba(162, 210, 255, 0.2)"></circle>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#7209b7" font-size="14" font-family="Outfit">Học Vẽ Cùng Bé</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== SIDE-OVER CART SLIDE PANEL ==================== -->
+  <div class="cart-panel" id="cart-panel">
+    <div class="cart-panel-overlay" id="cart-overlay"></div>
+    <div class="cart-panel-content glass">
+      <div class="cart-panel-header">
+        <h3>🎁 Giỏ Hàng Kết Quang</h3>
+        <button class="cart-close-btn" id="cart-close" aria-label="Đóng giỏ hàng">✕</button>
+      </div>
+
+      <div class="cart-items-wrapper" id="cart-items-container">
+        <!-- Dynamic items will be added here -->
+        <div class="cart-empty-message">Giỏ hàng của bạn đang trống. Hãy chọn những món quà lưu niệm để dệt thêm ánh sáng nhé!</div>
+      </div>
+
+      <div class="cart-panel-footer">
+        <div class="cart-summary-line">
+          <span>Tài trợ lưu niệm:</span>
+          <span id="cart-subtotal">0 đ</span>
+        </div>
+        <div class="cart-summary-line donation-line">
+          <span>Quyên góp ủng hộ thêm:</span>
+          <span id="cart-extra-donate">0 đ</span>
+        </div>
+        <div class="cart-summary-line total-line">
+          <span>Tổng tiền đóng góp:</span>
+          <span id="cart-total">0 đ</span>
+        </div>
+        <button class="btn btn-primary btn-glow w-full" id="btn-checkout">Xác Nhận Đóng Góp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DIALOG CHECKOUT SIMULATION ==================== -->
+  <div class="dialog-backdrop" id="checkout-dialog">
+    <div class="dialog-box glass text-center">
+      <div class="dialog-success-icon">🎉</div>
+      <h3 class="dialog-title">Cảm Ơn Đóng Góp Của Bạn!</h3>
+      <p class="dialog-desc" id="checkout-success-msg">
+        Bạn đã ủng hộ thành công <strong>150,000 đ</strong> vào quỹ của chiến dịch. Một ngôi sao lớn lung linh đã được tự động dệt thêm lên Bầu Trời Hy Vọng!
+      </p>
+      
+      <!-- Simulated QR code for premium checkout -->
+      <div class="qr-mockup">
+        <svg viewBox="0 0 100 100" class="qr-svg-mock">
+          <rect x="10" y="10" width="20" height="20" fill="currentColor"></rect>
+          <rect x="70" y="10" width="20" height="20" fill="currentColor"></rect>
+          <rect x="10" y="70" width="20" height="20" fill="currentColor"></rect>
+          <rect x="18" y="18" width="4" height="4" fill="#020617"></rect>
+          <rect x="78" y="18" width="4" height="4" fill="#020617"></rect>
+          <rect x="18" y="78" width="4" height="4" fill="#020617"></rect>
+          <rect x="40" y="40" width="20" height="20" fill="currentColor"></rect>
+          <rect x="45" y="15" width="10" height="5" fill="currentColor"></rect>
+          <rect x="15" y="45" width="5" height="10" fill="currentColor"></rect>
+          <rect x="75" y="45" width="8" height="15" fill="currentColor"></rect>
+          <rect x="45" y="75" width="15" height="8" fill="currentColor"></rect>
+        </svg>
+        <span class="qr-label">Quét mã giả lập chuyển khoản trực tiếp</span>
+      </div>
+
+      <button class="btn btn-primary" id="btn-close-dialog">Đóng & Nhìn Bầu Trời Sao</button>
+    </div>
+  </div>
+
+  <!-- ==================== CONFETTI CONTAINER ==================== -->
+  <div class="confetti-container" id="confetti-container"></div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col-about">
+        <h4 class="footer-logo">Hành Trình <span>Hy Vọng</span></h4>
+        <p class="footer-desc">Chiến dịch cộng đồng thuộc Cộng đồng Sinh viên Tình nguyện SiTiGroup - Trường Đại học FPT TP.HCM. Chung tay mang tới tương lai tốt đẹp hơn cho các em nhỏ kém may mắn.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          </a>
+          <a href="#" aria-label="Youtube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col-links">
+        <h4>Liên kết nhanh</h4>
+        <ul>
+          <li><a href="#about">Về chiến dịch</a></li>
+          <li><a href="#stations">3 Trạm trải nghiệm</a></li>
+          <li><a href="#constellation">Bầu trời hy vọng</a></li>
+          <li><a href="#shop">Mua đồ lưu niệm gây quỹ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col-contact">
+        <h4>Thông tin liên hệ</h4>
+        <ul>
+          <li>📍 Trường Đại học FPT TP.HCM, Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, TP. Hồ Chí Minh</li>
+          <li>✉️ sitigroup.fpt@gmail.com</li>
+          <li>📞 Hotline: (+84) 987 654 321</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-flex">
+        <p>&copy; 2026 Hành Trình Hy Vọng - SiTiGroup FPT University HCMC. All rights reserved.</p>
+        <p>Thiết kế đổi mới sáng tạo bởi Antigravity 💜</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Local Script -->
+  <script src="app.js"></script>
+</body>
+</html>
